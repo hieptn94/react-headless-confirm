@@ -1,14 +1,19 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { ConfirmDialogProps } from './types';
+import { DialogProps } from './types';
 import ConfirmContext from './ConfirmContext';
 import ConfirmProvider from './ConfirmProvider';
 
-const ConfirmDialog = ({ isVisible, onConfirm }: ConfirmDialogProps) => (
+const ConfirmDialog = ({
+  isVisible,
+  onConfirm,
+  onCancel,
+}: DialogProps<any>) => (
   <>
     ConfirmDialog-{isVisible ? 'visible' : 'invisible'}
     <button onClick={onConfirm} data-testid="btn-confirm" />
+    <button onClick={onCancel} data-testid="btn-cancel" />
   </>
 );
 
@@ -18,29 +23,29 @@ it('should render invisible confirm dialog', () => {
   expect(screen.queryByText(/ConfirmDialog-invisible/)).toBeInTheDocument();
 });
 
-const TestComponent = () => {
-  const { confirm } = React.useContext(ConfirmContext);
-  const [isConfirmed, setConfirmed] = React.useState(false);
-  const handleConfirm = async () => {
-    const result = await confirm();
-    setConfirmed(result);
-  };
-  return (
-    <>
-      Test-{isConfirmed ? 'confirmed' : 'notConfirmed'}
-      <button onClick={handleConfirm} data-testid="btn-open-confirm" />
-    </>
-  );
-};
-
 it('should get user confirmation', async () => {
+  const TestComponent = () => {
+    const { confirm } = React.useContext(ConfirmContext);
+    const [isConfirmed, setConfirmed] = React.useState(false);
+    const handleConfirm = async () => {
+      const result = await confirm();
+      setConfirmed(result);
+    };
+    return (
+      <>
+        Test-{isConfirmed ? 'isConfirmed' : 'isNotConfirmed'}
+        <button onClick={handleConfirm} data-testid="btn-open-confirm" />
+      </>
+    );
+  };
+
   render(
     <ConfirmProvider dialog={ConfirmDialog}>
       <TestComponent />
     </ConfirmProvider>
   );
 
-  expect(screen.queryByText(/Test-notConfirmed/)).toBeInTheDocument();
+  expect(screen.queryByText(/Test-isNotConfirmed/)).toBeInTheDocument();
 
   fireEvent.click(screen.getByTestId('btn-open-confirm'));
 
@@ -51,6 +56,43 @@ it('should get user confirmation', async () => {
   expect(screen.queryByText(/ConfirmDialog-invisible/)).toBeInTheDocument();
 
   await waitFor(() => {
-    expect(screen.queryByText(/Test-confirmed/)).toBeInTheDocument();
+    expect(screen.queryByText(/Test-isConfirmed/)).toBeInTheDocument();
+  });
+});
+
+it('should get user cancellation', async () => {
+  const TestComponent = () => {
+    const { confirm } = React.useContext(ConfirmContext);
+    const [isCancelled, setIsCancelled] = React.useState(false);
+    const handleConfirm = async () => {
+      const result = await confirm();
+      setIsCancelled(!result);
+    };
+    return (
+      <>
+        Test-{isCancelled ? 'isCancelled' : 'isNotCancelled'}
+        <button onClick={handleConfirm} data-testid="btn-open-confirm" />
+      </>
+    );
+  };
+
+  render(
+    <ConfirmProvider dialog={ConfirmDialog}>
+      <TestComponent />
+    </ConfirmProvider>
+  );
+
+  expect(screen.queryByText(/Test-isNotCancelled/)).toBeInTheDocument();
+
+  fireEvent.click(screen.getByTestId('btn-open-confirm'));
+
+  expect(screen.queryByText(/ConfirmDialog-visible/)).toBeInTheDocument();
+
+  fireEvent.click(screen.getByTestId('btn-cancel'));
+
+  expect(screen.queryByText(/ConfirmDialog-invisible/)).toBeInTheDocument();
+
+  await waitFor(() => {
+    expect(screen.queryByText(/Test-isCancelled/)).toBeInTheDocument();
   });
 });
