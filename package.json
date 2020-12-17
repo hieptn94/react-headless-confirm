@@ -39,8 +39,8 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "react-confirmation",
-  "author": "hieptn94",
+  "name": "@reactvn/react-confirmation",
+  "author": "hieptnguyen94",
   "module": "dist/react-confirmation.esm.js",
   "size-limit": [
     {
