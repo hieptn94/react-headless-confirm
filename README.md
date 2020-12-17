@@ -1,6 +1,6 @@
 # react-confirmation
 
-Promise based confirmation API for React.
+Headless, Promise-based confirm component for React.
 
 ## Example
 
