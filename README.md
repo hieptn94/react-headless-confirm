@@ -4,6 +4,12 @@ Promise based confirmation API for React.
 
 ## Example
 
+Build the library:
+> yarn install && yarn build
+
+Run example:
+> cd example && yarn install && yarn start
+
 ## Usage
 
 ```js
