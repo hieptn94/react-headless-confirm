@@ -1,25 +1,39 @@
 import React from 'react';
 
-import { ConfirmProviderProps, DialogProps } from './types';
+import {
+  ConfirmProviderProps,
+  DialogProps,
+  ConfirmFunctionArgs,
+  ConfirmFunction,
+} from './types';
 import ConfirmContext from './ConfirmContext';
 
-export default function ConfirmProvider<T>({
+export default function ConfirmProvider({
   dialog,
   children,
-}: ConfirmProviderProps<T>) {
+}: ConfirmProviderProps) {
   const promiseRef = React.useRef<
     [(value: boolean) => void, (value: boolean) => void]
   >();
-  const [isVisible, setIsVisible] = React.useState(false);
-  const confirm = React.useCallback(() => {
-    setIsVisible(true);
-    return new Promise<boolean>((...args) => {
-      promiseRef.current = args;
-    });
-  }, []);
+  const [dialogProps, setDialogProps] = React.useState({
+    isOpen: false,
+  });
+  const confirm = React.useCallback<ConfirmFunction>(
+    (args?: ConfirmFunctionArgs) => {
+      setDialogProps(dialogProps => ({
+        ...dialogProps,
+        ...args,
+        isOpen: true,
+      }));
+      return new Promise<boolean>((...args) => {
+        promiseRef.current = args;
+      });
+    },
+    []
+  );
 
   const handleConfirm = () => {
-    setIsVisible(false);
+    setDialogProps({ isOpen: false });
     if (!promiseRef.current) {
       return;
     }
@@ -27,7 +41,7 @@ export default function ConfirmProvider<T>({
   };
 
   const handleCancel = () => {
-    setIsVisible(false);
+    setDialogProps({ isOpen: false });
     if (!promiseRef.current) {
       return;
     }
@@ -36,12 +50,15 @@ export default function ConfirmProvider<T>({
 
   const contextValue = React.useMemo(() => ({ confirm }), []);
 
-  const DialogComponent = dialog as React.ComponentType<DialogProps<any>>;
+  const DialogComponent = dialog as React.ComponentType<DialogProps>;
+
+  const { isOpen } = dialogProps;
 
   return (
     <>
       <DialogComponent
-        isVisible={isVisible}
+        {...dialogProps}
+        isOpen={isOpen}
         onConfirm={handleConfirm}
         onCancel={handleCancel}
       />

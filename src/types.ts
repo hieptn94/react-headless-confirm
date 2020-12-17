@@ -1,15 +1,23 @@
 import React from 'react';
 
-export type DialogProps<CustomDialogProps> = CustomDialogProps & {
-  isVisible?: boolean;
+export type DialogProps = any & {
+  isOpen?: boolean;
   onConfirm: VoidFunction;
   onCancel: VoidFunction;
 };
 
-export type ConfirmProviderProps<T> = React.PropsWithChildren<{
-  dialog: React.ComponentType<DialogProps<T>>;
+export type ConfirmProviderProps = React.PropsWithChildren<{
+  dialog: React.ComponentType<DialogProps>;
 }>;
 
+export interface ConfirmFunctionArgs {
+  title?: string;
+  content?: string;
+  confirmText?: string;
+  cancelText?: string;
+}
+
+export type ConfirmFunction = (args?: ConfirmFunctionArgs) => Promise<boolean>;
 export interface ConfirmContextValue {
-  confirm: () => Promise<boolean>;
+  confirm: ConfirmFunction;
 }

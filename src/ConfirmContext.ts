@@ -3,7 +3,7 @@ import React from 'react';
 import { ConfirmContextValue } from './types';
 
 const ConfirmContext: React.Context<ConfirmContextValue> = React.createContext({
-  confirm: () => Promise.resolve<boolean>(true),
+  confirm: (_: any) => Promise.resolve<boolean>(false),
 });
 
 export default ConfirmContext;
