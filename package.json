@@ -40,6 +40,7 @@
     "trailingComma": "es5"
   },
   "name": "@reactvn/react-confirmation",
+  "description": "Headless, Promise-based confirm component for React.",
   "author": "hieptnguyen94",
   "module": "dist/react-confirmation.esm.js",
   "size-limit": [
