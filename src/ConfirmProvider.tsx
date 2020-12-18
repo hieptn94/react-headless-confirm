@@ -48,7 +48,7 @@ export default function ConfirmProvider({
     promiseRef.current[0](false);
   };
 
-  const contextValue = React.useMemo(() => ({ confirm }), []);
+  const contextValue = React.useMemo(() => ({ confirm }), [confirm]);
 
   const DialogComponent = dialog as React.ComponentType<DialogProps>;
 
