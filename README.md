@@ -13,7 +13,7 @@ Run example:
 ## Usage
 
 ```js
-import { ConfirmProvider, useConfirm } from '@reactvn/react-confirmation';
+import { ConfirmProvider, useConfirm } from 'react-headless-confirm';
 
 // ConfirmProvider must be placed on top of your components.
 function App() {

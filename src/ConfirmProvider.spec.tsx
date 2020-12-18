@@ -15,8 +15,8 @@ const ConfirmDialog = ({
   cancelText,
 }: DialogProps) => (
   <>
-    ConfirmDialog-{isOpen ? 'open' : 'closed'}-{title}-{content}-
-    {confirmText}-{cancelText}
+    ConfirmDialog-{isOpen ? 'open' : 'closed'}-{title}-{content}-{confirmText}-
+    {cancelText}
     <button onClick={onConfirm} data-testid="btn-confirm" />
     <button onClick={onCancel} data-testid="btn-cancel" />
   </>
