@@ -1,4 +1,4 @@
-name: react-confirmation release
+name: react-headless-confirm release
 on:
   release:
     types: [created]
