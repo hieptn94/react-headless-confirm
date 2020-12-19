@@ -30,6 +30,10 @@ export default function ConfirmProvider({
     },
     []
   );
+  const close = React.useCallback<VoidFunction>(
+    () => setDialogProps({ isOpen: false }),
+    []
+  );
 
   const handleConfirm = () => {
     setDialogProps({ isOpen: false });
@@ -47,7 +51,10 @@ export default function ConfirmProvider({
     promiseRef.current[0](false);
   };
 
-  const contextValue = React.useMemo(() => ({ confirm }), [confirm]);
+  const contextValue = React.useMemo(() => ({ confirm, close }), [
+    confirm,
+    close,
+  ]);
 
   const DialogComponent = dialog as React.ComponentType<DialogProps>;
 

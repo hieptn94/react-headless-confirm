@@ -7,6 +7,7 @@ import useConfirm from './useConfirm';
 it('should get context value', () => {
   const contextValue = {
     confirm: () => Promise.resolve<boolean>(false),
+    close: () => {},
   };
   const { result } = renderHook(useConfirm, {
     wrapper: ({ children }) => (
