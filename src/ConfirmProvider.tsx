@@ -1,12 +1,11 @@
 import React from 'react';
 
-import {
-  ConfirmProviderProps,
-  DialogProps,
-  ConfirmFunctionArgs,
-  ConfirmFunction,
-} from './types';
+import { DialogProps, ConfirmFunctionArgs, ConfirmFunction } from './types';
 import ConfirmContext from './ConfirmContext';
+
+type ConfirmProviderProps = React.PropsWithChildren<{
+  dialog: React.ComponentType<DialogProps>;
+}>;
 
 export default function ConfirmProvider({
   dialog,
