@@ -130,3 +130,28 @@ it('should get user cancellation', async () => {
     expect(screen.queryByText(/Test-isCancelled/)).toBeInTheDocument();
   });
 });
+
+it('should close component without touching the dialog', () => {
+  const TestComponent = () => {
+    const { confirm, close } = React.useContext(ConfirmContext);
+    return (
+      <>
+        <button onClick={() => confirm()}>open confirm</button>
+        <button onClick={close}>close confirm</button>
+      </>
+    );
+  };
+  render(
+    <ConfirmProvider dialog={ConfirmDialog}>
+      <TestComponent />
+    </ConfirmProvider>
+  );
+
+  fireEvent.click(screen.getByText(/open confirm/));
+
+  expect(screen.queryByText(/ConfirmDialog-open/)).toBeInTheDocument();
+
+  fireEvent.click(screen.getByText(/close confirm/));
+
+  expect(screen.queryByText(/ConfirmDialog-closed/)).toBeInTheDocument();
+});
