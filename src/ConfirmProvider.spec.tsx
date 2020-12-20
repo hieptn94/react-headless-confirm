@@ -131,12 +131,21 @@ it('should get user cancellation', async () => {
   });
 });
 
-it('should close component without touching the dialog', () => {
+it('should close component without touching the dialog', async () => {
   const TestComponent = () => {
     const { confirm, close } = React.useContext(ConfirmContext);
+    const [closed, setClosed] = React.useState(false);
+    const handleConfirm = async () => {
+      try {
+        await confirm();
+      } catch (e) {
+        setClosed(true);
+      }
+    };
     return (
       <>
-        <button onClick={() => confirm()}>open confirm</button>
+        TestComponent-{closed && 'closed'}
+        <button onClick={handleConfirm}>open confirm</button>
         <button onClick={close}>close confirm</button>
       </>
     );
@@ -154,4 +163,8 @@ it('should close component without touching the dialog', () => {
   fireEvent.click(screen.getByText(/close confirm/));
 
   expect(screen.queryByText(/ConfirmDialog-closed/)).toBeInTheDocument();
+
+  await waitFor(() => {
+    expect(screen.queryByText(/TestComponent-closed/)).toBeInTheDocument();
+  });
 });

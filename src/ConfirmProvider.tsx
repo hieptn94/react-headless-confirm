@@ -12,7 +12,7 @@ export default function ConfirmProvider({
   children,
 }: ConfirmProviderProps) {
   const promiseRef = React.useRef<
-    [(value: boolean) => void, (value: boolean) => void]
+    [(value: boolean) => void, (_?: any) => void]
   >();
   const [dialogProps, setDialogProps] = React.useState({
     isOpen: false,
@@ -30,10 +30,13 @@ export default function ConfirmProvider({
     },
     []
   );
-  const close = React.useCallback<VoidFunction>(
-    () => setDialogProps({ isOpen: false }),
-    []
-  );
+  const close = React.useCallback<VoidFunction>(() => {
+    setDialogProps({ isOpen: false });
+    if (!promiseRef.current) {
+      return;
+    }
+    promiseRef.current[1]();
+  }, []);
 
   const handleConfirm = () => {
     setDialogProps({ isOpen: false });
