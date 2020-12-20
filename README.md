@@ -1,4 +1,4 @@
-# react-confirmation
+# react-headless-confirm
 
 Headless, Promise-based confirm component for React.
 
