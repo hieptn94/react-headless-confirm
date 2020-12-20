@@ -1,19 +1,18 @@
 import React from 'react';
 
-import {
-  ConfirmProviderProps,
-  DialogProps,
-  ConfirmFunctionArgs,
-  ConfirmFunction,
-} from './types';
+import { DialogProps, ConfirmFunctionArgs, ConfirmFunction } from './types';
 import ConfirmContext from './ConfirmContext';
+
+type ConfirmProviderProps = React.PropsWithChildren<{
+  dialog: React.ComponentType<DialogProps>;
+}>;
 
 export default function ConfirmProvider({
   dialog,
   children,
 }: ConfirmProviderProps) {
   const promiseRef = React.useRef<
-    [(value: boolean) => void, (value: boolean) => void]
+    [(value: boolean) => void, (_?: any) => void]
   >();
   const [dialogProps, setDialogProps] = React.useState({
     isOpen: false,
@@ -31,6 +30,13 @@ export default function ConfirmProvider({
     },
     []
   );
+  const close = React.useCallback<VoidFunction>(() => {
+    setDialogProps({ isOpen: false });
+    if (!promiseRef.current) {
+      return;
+    }
+    promiseRef.current[1]();
+  }, []);
 
   const handleConfirm = () => {
     setDialogProps({ isOpen: false });
@@ -48,7 +54,10 @@ export default function ConfirmProvider({
     promiseRef.current[0](false);
   };
 
-  const contextValue = React.useMemo(() => ({ confirm }), [confirm]);
+  const contextValue = React.useMemo(() => ({ confirm, close }), [
+    confirm,
+    close,
+  ]);
 
   const DialogComponent = dialog as React.ComponentType<DialogProps>;
 
